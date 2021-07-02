@@ -1,10 +1,10 @@
 <template>
   <div id="app">
-    <Header :color="pickedColor" :colorSelection="colorSelection"/>
-    <Navigator :message="messageDisplay" @restart="restart($event)" :restartBtn="restartBtnText" @colorCount="colorCount=$event" @isHardSelected="isHardSelected=$event" />
+    <Header />
+    <Navigator @restart="restart($event)"/>
     <div id="container">
-      <div v-for="(cuadrado, index) in colors" :key="index">
-        <Container :color="colors[index]" @squareSelected="eventClick($event)"/>
+      <div v-for="(cuadrado, index) in $store.state.colors" :key="index">
+        <Container :color="$store.state.colors[index]" :win="win" @squareSelected="eventClick($event)"/>
       </div>
     </div>
   </div>
@@ -22,46 +22,39 @@ export default {
     Navigator,
     Container
   },
-  props:['isHardSelected', 'colorCount'],
+  props:[],
 
   data(){
     return{
-      colors: [],
-      pickedColor: '',
-      messageDisplay: '',
-      colorSelection: '',
-      restartBtnText: '',
-
-
+      win: false
     }
   },
   mounted(){
     this.restart();
-    this.pickedColor = '';
+    this.$store.state.pickedColor = '';
   },
   methods: {
     eventClick(squareColor){
-       squareColor = this.style.backgroundColor
-      if (squareColor === this.pickedColor) {
-        this.restartBtnText = "Play Again!"
-        this.messageDisplay = "You Picked Right!"
-        this.setColors(this.pickedColor);
-        this.colorSelection = this.pickedColor
+       //squareColor = this.style.backgroundColor
+      if (squareColor === this.$store.state.pickedColor) {
+        this.$store.state.restartBtnText = 'Play Again!'
+        this.$store.state.messageDisplay = 'You Picked Right';
+        this.win = true
+        this.setColors(this.$store.state.pickedColor);
+        this.$store.state.colorSelection = this.$store.state.pickedColor;
       } else {
-        this.messageDisplay = "Try Again!"
-        this.style.backgroundColor = "#232323"
-        this.messageDisplay.style.color = "#000000";
+        this.$store.state.messageDisplay = "Try Again!";
+       // this.style.backgroundColor = "#232323"
+        
       }
     },
     setColors(color){
-      for (let i = 0; i < this.colors.length; i++) {
-        this.colors[i] = color;
-      }
+       this.$store.dispatch('setColors', color)
     },
 
     resetPick(){
       var number;
-      if (this.isHardSelected) {
+      if (this.$store.state.isHardSelected) {
         number = 6
       } else{
         number = 3
@@ -87,11 +80,12 @@ export default {
     },
 
     restart(){
-      this.colors = this.createNewColors(this.colorCount)
-      this.messageDisplay = ""
-      this.restartBtnText = "NEW COLORS!"
-      this.pickedColor = this.colors[this.resetPick()]
-      this.colorSelection = "steelblue"
+      this.win = false;
+      this.$store.state.colors = this.createNewColors(this.$store.state.colorCount);
+      this.$store.state.messageDisplay = "Pick New Colors!";
+      this.$store.state.restartBtnText = "New Colors!";
+      this.$store.state.pickedColor = this.$store.state.colors[this.resetPick()];
+      this.$store.state.colorSelection = "steelblue";
     }
   }
 }

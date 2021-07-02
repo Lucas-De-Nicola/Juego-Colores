@@ -1,7 +1,7 @@
 <template>
 
   <section class="src-components-container">
-    <div class="square" :style="{backgroundColor: color}" @click="squareSelected">
+    <div class="square" :style="{background: color}" @click="squareSelected">
 	  </div>
   </section>
 

@@ -2,8 +2,8 @@
 
   <section class="src-components-navigator">
     <div id="navigator">
-		  <button id="reset" @click="eventBtnRestart()">{{restartBtn}}</button>
-		  <span id="message"> {{message}}</span>
+		  <button id="reset" @click="eventBtnRestart()">{{this.$store.state.restartBtnText}}</button>
+		  <span id="message">  {{this.$store.state.messageDisplay}}</span>
 
 	  	<button id="easy" :class="{selected: isEasySelected}" @click="eventBtnEasy()">easy</button>
 		  <button id="hard" :class="{selected: isHardSelected}" @click="eventBtnHard()">hard</button>
@@ -17,40 +17,34 @@
 
   export default  {
     name: 'src-components-navigator',
-    props: ['restartBtn', 'message'],
+    props: [],
     mounted () {
 
     },
     data () {
       return {
-        colorCount: 6,
-        isEasySelected: false,
-        isHardSelected: true 
+        
       }
     },
     methods: {
       eventBtnEasy(){
-        if (isHardSelected) {
-          this.isHardSelected = false
-          this.isEasySelected = true
-          this.colorCount = 3
-          this.$emit('colorCount', this.colorCount)
-          this.$emit('isHardSelected', this.isHardSelected)
-          this.$emit('restart', this.colorCount)
+         if(this.$store.state.isHardSelected){
+          this.$store.state.isHardSelected = false;
+          this.$store.state.isEasySelected = true;
+          this.$store.state.colorCount = 3;
+          this.$emit('restart', this.$store.state.colorCount)
         }
       },
       eventBtnHard(){
-        if (!isHardSelected) {
-          this.isHardSelected = true
-          this.isEasySelected = false
-          this.colorCount = 6
-          this.$emit('colorCount', this.colorCount)
-          this.$emit('isHardSelected', this.isHardSelected)
-          this.$emit('restart', this.colorCount)
+        if(!this.$store.state.isHardSelected){
+          this.$store.state.isHardSelected = true;
+          this.$store.state.isEasySelected = false;
+          this.$store.state.colorCount = 6;
+          this.$emit('restart', this.$store.state.colorCount)
         }
       },
       eventBtnRestart(){
-        this.$emit('restart', this.colorCount)
+        this.$emit('restart', this.$store.state.colorCount)
       }
     },
     computed: {
@@ -90,7 +84,7 @@
   }
 
   #message {
-	  color: #ffffff;
+	  
 	  display: inline-block;
 	  width: 20%;
   }

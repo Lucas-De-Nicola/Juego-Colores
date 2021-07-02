@@ -1,9 +1,9 @@
 <template>
 
   <section class="src-components-header">
-   	<div id="header" :style="{background: colorSelection}">
+   	<div id="header" :style="[$store.state.colorSelection && {background: $store.state.colorSelection}]">
 		  <h1>The Great <br>
-			  <span id="colorDisplay">{{color}}</span>
+			  <span id="colorDisplay">{{$store.state.pickedColor}}</span>
 			  <br>
 		    	Guessing Game</h1>
 	  </div>
@@ -15,7 +15,7 @@
 
   export default  {
     name: 'src-components-header',
-    props: ['colorSelection', 'color'],
+    props: [],
     mounted () {
 
     },
